@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@hapi/joi": "^15.1.0",
     "axios": "^0.18.1",
     "bcrypt": "^3.0.2",
     "concurrently": "^4.1.0",
@@ -14,7 +15,6 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "helmet": "^3.15.0",
-    "joi": "^14.3.0",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.14",
     "mongoose-auto-increment": "^5.0.1",

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const { Schema } = mongoose;
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 const orderSchema = new Schema({
   customerId: {
