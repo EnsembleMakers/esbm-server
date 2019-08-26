@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const Joi = require('Joi');
+const Joi = require('@hapi/joi');
 
 const orderTemplateSchema = new Schema({
   userId: {

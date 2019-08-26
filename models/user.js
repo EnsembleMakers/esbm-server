@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const uniqueValidator = require('mongoose-unique-validator');
@@ -78,7 +78,7 @@ const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
   const schema = {
-    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().required(),
     username: Joi.string().min(1).required(),
     kind: Joi.string().required(),
