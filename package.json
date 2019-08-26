@@ -32,7 +32,9 @@
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.14"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
   "scripts": {
     "start": "nodemon index.js",
     "server": "nodemon index.js",
