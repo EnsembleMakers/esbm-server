@@ -15,14 +15,20 @@ router.get('/', async(req, res, next) => {
 
 // get order by id
 router.get('/:id', async(req, res, next) => {
-  // customerId로 조회
-  let order = await Order.findOne({"customerId": req.params.id}).populate('customerId');
+  let order = await Order.findOne({"_id": req.params.id});
   res.send(order);
 })
 
 // get order by orderNumber
 router.get('/byNum/:id', async(req, res, next) => {
-  let order = await Order.findOne({"orderNumber": req.params.id}).populate('customerId');
+  let order = await Order.findOne({"orderNumber": req.params.id})
+  res.send(order);
+})
+
+// get orders by by makerId
+router.get('/byMakerId/:id', async(req, res, next) => {
+  // customerInfo, state, _id만 반환
+  let order = await Order.find({"makerId": req.params.id},{customerInfo: true, state: true, _id: true});
   res.send(order);
 })
 
@@ -30,9 +36,24 @@ router.get('/byNum/:id', async(req, res, next) => {
 router.post('/', async(req, res, next) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
-  let order = new Order(req.body);
+  let newOrder = req.body;
+  // if order by model manager
+  // copy model image
+  if(req.body.modelImage) {
+    // new model image name
+    const ext = path.extname(req.body.modelImage);
+    const newModelImage = path.basename(req.body.modelImage, ext) + '_copied_' + new Date().valueOf() + ext;
+
+    await fs.copyFile(`uploads/${req.body.modelImage.split('/')[2]}`, `uploads/${newModelImage}`,(err) => {
+      if (err) throw err;
+    })
+
+    newOrder.modelImage = `/img/${newModelImage}`;
+  }
+
+  let order = new Order(newOrder);
   order = await order.save();
-  res.send(order);
+  await res.send(order);
 })
 
 // input order contents (by patch)
@@ -41,6 +62,18 @@ router.patch('/:id', async(req, res, next) => {
   order.contents = req.body;
   await order.save();
   await res.send(req.body);
+})
+
+// delete order by id
+router.delete('/:id', async(req, res, next) => {
+  // image 삭제
+  fs.unlink(`uploads/${req.body.modelImage}`, async(err) => {
+    const order = await Order.deleteOne({
+      "_id": req.params.id
+    })
+  })
+  const deleteIndex = await req.body.index
+  await res.send(JSON.stringify(deleteIndex))
 })
 
 // patch processing date
@@ -62,6 +95,16 @@ router.delete('/processingDate/:id/:processing', async(req, res, next) => {
     { $unset : obj }
   );
   await res.send(processing);
+})
+
+// change state
+router.patch('/changeState/:id', async(req, res, next) => {
+  const order = await Order.findByIdAndUpdate(
+    req.params.id,
+    // {"state": "proceessing"} or {"state": "ordered"}...
+    req.body
+  );
+  await res.send(req.body);
 })
 
 // change processing state
