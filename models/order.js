@@ -100,18 +100,6 @@ function validateOrder(order) {
           "value": Joi.any()
         }))
     },
-    // model: Joi.string(),
-    // rightSize: Joi.string(),
-    // leftSize: Joi.string(),
-    // last: Joi.string(),
-    // sole: Joi.string(),
-    // midsole: Joi.string(),
-    // sockLining: Joi.string(),
-    // heel: Joi.string(),
-    // decoration: Joi.string(),
-    // material: Joi.string(),
-    // innerMaterial: Joi.string(),
-    // color: Joi.string(),
     detail: Joi.string(),
     modelImage: Joi.string(),
   }
