@@ -26,10 +26,13 @@ const orderSchema = new Schema({
     required: true,
   },
   contents: {
-    type: Object,
-  },
-  detail: {
-    type: String,
+    template: {
+      type: Array,
+    },
+    nonTemplate: {
+      type: Array,
+      default: [{ label: "특이사항", value: "" }]
+    }
   },
   images: {
     type: [ String ]
