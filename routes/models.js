@@ -80,8 +80,7 @@ router.delete('/:id', async(req, res, next) => {
       "_id": req.params.id
     })
   })
-  const deletedIndex = await req.body.index
-  await res.send(JSON.stringify(deletedIndex))
+  await res.send(req.params.id)
 })
 
 // post model image
