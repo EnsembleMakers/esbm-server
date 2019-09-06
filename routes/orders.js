@@ -72,8 +72,7 @@ router.delete('/:id', async(req, res, next) => {
       "_id": req.params.id
     })
   })
-  const deleteIndex = await req.body.index
-  await res.send(JSON.stringify(deleteIndex))
+  await res.send(req.params.id)
 })
 
 // patch processing date
