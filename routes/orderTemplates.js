@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 
 const { hashPassword } = require('../lib/hashPassword');
 const { OrderTemplate, validate } = require('../models/orderTemplate');

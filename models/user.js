@@ -51,15 +51,10 @@ const userSchema = new Schema({
     required: true,
     default: 'local'
   },
-  oauth2: String,
-  posts_host: [{
+  socialAccounts: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Post"
-  }],
-  // posts_join: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "Post"
-  // }]
+    ref: 'SocialAccount'
+  }]
 }, {
   timestamps: true
 });
@@ -86,7 +81,7 @@ function validateUser(user) {
     company: { companyName: Joi.string(), companyAddress: Joi.string(), companyPhone: Joi.string()},
     group: { grouped: Joi.boolean(), groupId: Joi.string() },
     provider: Joi.string(),
-    oauth2: Joi.string()
+    socialAccounts: Joi.array()
   }
   return Joi.validate(user, schema);
 }
