@@ -29,9 +29,13 @@ const orderSchema = new Schema({
     template: {
       type: Array,
     },
-    nonTemplate: {
-      type: Array,
-      default: [{ label: "특이사항", value: "" }]
+    detail: {
+      type: String,
+      deault: ""
+    },
+    deadline: {
+      type: Number,
+      defulat: null
     }
   },
   images: {
@@ -101,7 +105,8 @@ function validateOrder(order) {
         Joi.object().keys({
           "label": Joi.string(),
           "value": Joi.any()
-        }))
+        })),
+      detail: Joi.string()
     },
     detail: Joi.string(),
     modelImage: Joi.string(),

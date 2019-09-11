@@ -15,10 +15,7 @@ const modelSchema = new Schema({
   contents: {
     template: {
       type: Array,
-    },
-    // nonTemplate: {
-    //   type: Array
-    // }
+    }
   },
 }, {
   timestramps: true
@@ -35,13 +32,7 @@ function validateOrder(model) {
         Joi.object().keys({
           "label": Joi.string(),
           "value": Joi.any()
-        })),
-      nonTemplate: Joi.array().items(
-        Joi.object().keys({
-          "label": Joi.string(),
-          "value": Joi.any()
-        })
-      )
+        }))
     },
   }
   return Joi.validate(model, schema);
