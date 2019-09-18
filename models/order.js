@@ -31,11 +31,7 @@ const orderSchema = new Schema({
     },
     detail: {
       type: String,
-      deault: ""
-    },
-    deadline: {
-      type: Number,
-      defulat: null
+      default: ''
     }
   },
   images: {
@@ -68,13 +64,17 @@ const orderSchema = new Schema({
     type: Number,
     default: 0,
   },
+  deadline: {
+    type: Number,
+    default: 0,
+  },
   review: {
     type: String,
   },
   // 주문상태
   state: {
     type: String,
-    default: "ordered"
+    default: 'ordered'
   }
 }, {
   timestamps: true
@@ -106,10 +106,10 @@ function validateOrder(order) {
           "label": Joi.string(),
           "value": Joi.any()
         })),
-      detail: Joi.string()
+      detail: Joi.any()
     },
-    detail: Joi.string(),
-    modelImage: Joi.string(),
+    // string or null
+    modelImage: Joi.any(),
   }
   return Joi.validate(order, schema);
 }

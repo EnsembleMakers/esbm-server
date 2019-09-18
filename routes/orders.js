@@ -35,6 +35,7 @@ router.get('/byMakerId/:id', async(req, res, next) => {
 // post order
 router.post('/', async(req, res, next) => {
   const { error } = validate(req.body);
+  console.log(error)
   if (error) return res.status(400).send(error.message);
   let newOrder = req.body;
   // if order by model manager
@@ -62,6 +63,14 @@ router.patch('/:id', async(req, res, next) => {
   order.contents = req.body;
   await order.save();
   await res.send(req.body);
+})
+
+// patch order deadline
+router.patch('/deadline/:id', async(req, res, next) => {
+  const order = await Order.findById(req.params.id)
+  order.deadline = req.body.deadline;
+  await order.save();
+  await res.send(req.body)
 })
 
 // delete order by id
