@@ -97,7 +97,7 @@ function validateOrder(order) {
     customerInfo: {
       name: Joi.string().required(),
       phone: Joi.string().required(),
-      address: Joi.string()
+      address: Joi.any()
     },
     makerId: Joi.string().required(),
     contents: { 
