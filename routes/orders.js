@@ -35,7 +35,6 @@ router.get('/byMakerId/:id', async(req, res, next) => {
 // post order
 router.post('/', async(req, res, next) => {
   const { error } = validate(req.body);
-  console.log(error)
   if (error) return res.status(400).send(error.message);
   let newOrder = req.body;
   // if order by model manager

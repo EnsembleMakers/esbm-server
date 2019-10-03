@@ -13,6 +13,7 @@ const modelSchema = new Schema({
     default: null
   },
   contents: {
+    model: String,
     template: {
       type: Array,
     }
@@ -28,6 +29,7 @@ function validateOrder(model) {
     makerId: Joi.string().required(),
     modelImage: Joi.string(),
     contents: { 
+      model: Joi.string().required(),
       template: Joi.array().items(
         Joi.object().keys({
           "label": Joi.string(),

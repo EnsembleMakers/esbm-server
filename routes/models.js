@@ -21,11 +21,10 @@ router.get('/byId/:id', async(req, res, next) => {
 
 // get model by modelName
 router.get('/byName/:name', async(req, res, next) => {
-  const models = await Model.find({
-    "contents.template": { $elemMatch: { "label": "모델", "value": req.params.name}}
-  });
-  // res.send(models);
-  res.send(models[0])
+  const models = await Model.findOne({
+    "contents.model": req.params.name
+  })
+  res.send(models)
 });
 
 // image content patch
@@ -61,7 +60,7 @@ router.post('/', upload.single('modelImage'), async(req, res, next) => {
   if (error) return res.status(400).send(error.message);
 
   // 모델 중복확인
-  const exModel = await Model.find({'contents.template.0.value': rebody.contents.template[0].value})
+  const exModel = await Model.find({'contents.model': rebody.contents.model})
   if(exModel[0]) {
     return res.status(404).json({"key": "model", "message": "이미 존재하는 모델 이름입니다."})
   }
@@ -76,8 +75,8 @@ router.patch('/:id', async(req, res, next) => {
   
   // 모델 중복확인
   // 모델 이름을 바꿨을 때 검사
-  if(model.contents.template[0].value !== req.body.template[0].value) {
-    const exModel = await Model.find({'contents.template.0.value': req.body.template[0].value})
+  if(model.contents.model !== req.body.model) {
+    const exModel = await Model.find({'contents.model': req.body.model})
     if(exModel[0]) {
       return res.status(404).json({"key": "model", "message": "이미 존재하는 모델 이름입니다."})
     }

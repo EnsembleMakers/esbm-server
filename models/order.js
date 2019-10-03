@@ -29,6 +29,10 @@ const orderSchema = new Schema({
     template: {
       type: Array,
     },
+    model: {
+      type: String,
+      default: ''
+    },
     detail: {
       type: String,
       default: ''
@@ -106,6 +110,7 @@ function validateOrder(order) {
           "label": Joi.string(),
           "value": Joi.any()
         })),
+      model: Joi.string().required(),
       detail: Joi.any()
     },
     // string or null

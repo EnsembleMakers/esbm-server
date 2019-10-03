@@ -15,7 +15,7 @@ const orderTemplateSchema = new Schema({
   },
   template: {
     type: [ String ],
-    default: ['모델', '라스트', '창', '중창', '굽', '장식', '까래', '소재', '내피', '오른발 사이즈', '왼발 사이즈', '색상']
+    default: ['라스트', '창', '중창', '굽', '장식', '까래', '소재', '내피', '오른발 사이즈', '왼발 사이즈', '색상']
   }
 }, {
   timestamps: true
