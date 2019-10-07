@@ -60,7 +60,7 @@ router.post('/', upload.single('modelImage'), async(req, res, next) => {
   if (error) return res.status(400).send(error.message);
 
   // 모델 중복확인
-  const exModel = await Model.find({'contents.model': rebody.contents.model})
+  const exModel = await Model.find({ $and: [{'makerId': req.body.makerId}, {'contents.model': rebody.contents.model}] })
   if(exModel[0]) {
     return res.status(404).json({"key": "model", "message": "이미 존재하는 모델 이름입니다."})
   }
@@ -72,19 +72,19 @@ router.post('/', upload.single('modelImage'), async(req, res, next) => {
 // patch model by Id
 router.patch('/:id', async(req, res, next) => {
   const model = await Model.findById(req.params.id)
-  
+
   // 모델 중복확인
   // 모델 이름을 바꿨을 때 검사
-  if(model.contents.model !== req.body.model) {
-    const exModel = await Model.find({'contents.model': req.body.model})
+  if(model.contents.model !== req.body.contents.model) {
+    const exModel = await Model.find({ $and: [{'makerId': req.body.makerId}, {'contents.model': rebody.contents.model}] })
     if(exModel[0]) {
       return res.status(404).json({"key": "model", "message": "이미 존재하는 모델 이름입니다."})
     }
   }
 
-  model.contents = req.body;
+  model.contents = req.body.contents;
   await model.save();
-  await res.send({id: req.params.id, contents: req.body});
+  await res.send({id: req.params.id, contents: req.body.contents});
 })
 
 router.delete('/:id', async(req, res, next) => {
