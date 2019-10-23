@@ -29,8 +29,6 @@ mongoose
  */
 // const indexRouter = require('./routes');
 const authRouter = require('./routes/auth');
-const portionsRouter = require('./routes/portions');
-const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
 const reviewsRouter = require('./routes/reviews');
 const ordersRouter = require('./routes/orders');
@@ -65,8 +63,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/portions', portionsRouter);
-app.use('/api/posts', postsRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/orderTemplates', orderTemplatesRouter);

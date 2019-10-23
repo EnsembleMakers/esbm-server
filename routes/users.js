@@ -1,6 +1,4 @@
 const { User, validate } = require('../models/user');
-const { Post } = require('../models/post');
-const { Portion } = require('../models/portion');
 const { hashPassword } = require('./middlewares');
 
 const express = require('express');
@@ -76,14 +74,6 @@ router.patch('/:id', async (req, res) => {
 // delete user
 router.delete('/:id', async (req, res) => {
   let user = await User.findByIdAndDelete(req.params.id);
-
-  user.posts_host.forEach(async post_id => {
-    await Post.findByIdAndDelete(post_id);
-  });
-  user.posts_join.forEach(async post_id => {
-    await Portion.deleteMany({ post_id: post_id, user_id: user._id });
-  });
-
   res.send(user);
 });
 

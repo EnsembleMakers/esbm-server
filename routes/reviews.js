@@ -3,6 +3,9 @@ const { Review, validate } = require('../models/review');
 const express = require('express');
 const router = express.Router();
 
+const fs = require('fs');
+const path = require('path');
+
 // get all review
 
 // get review by id
@@ -30,6 +33,44 @@ router.patch('/:id', async(req, res, next) => {
   review["content"] = req.body.content;
   review.save();
   res.send(review);
+})
+
+// CKEditor
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+const FileReader = require('filereader')
+
+router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
+  console.log(req.body)
+  console.log(req.files)
+  const orifilepath = req.files.upload.path;
+  const orifilename = req.files.upload.name;
+  const srvfilename = orifilename;
+
+  fs.readdir(path.join(__dirname, `../uploads/temp/${req.body.postId}`), (error) => {
+    if(error) {
+      fs.mkdirSync(path.join(__dirname, '../uploads/temp/', req.body.postId))
+    }
+  })
+
+  fs.readFile(orifilepath, (err, data) => {
+    const newPath = path.join(__dirname, '../uploads/temp/', req.body.postId, '/', srvfilename)
+    fs.writeFile(newPath, data, function (err) {
+      if (err) console.log({ err: err });
+      else {
+        html = "{\"filename\" : \"" + orifilename + "\", \"uploaded\" : 1, \"url\": \"/img/temp/" + req.body.postId + "/" +srvfilename + "\"}"
+        res.send(html);
+      }
+    });
+
+    // // files를 req로 받아서 사진을 직접 저장하지 않고 DataURL 미리보기만 임시로 생성해서 src path로 넣어준다.
+    // let reader = new FileReader();
+    // reader.readAsDataURL(req.files.upload)
+    // reader.onload = () => {
+    //   html = "{\"filename\" : \"" + orifilename + "\", \"uploaded\" : 1, \"url\": \"" + reader.result + "\"}"
+    //   res.send(html)
+    // }
+  });
 })
 
 module.exports = router;
