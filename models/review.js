@@ -9,6 +9,11 @@ const reviewSchema = new Schema({
     required: true,
     ref: "Order"
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User"
+  },
   rating: {
     type: Number,
     required: true
@@ -16,6 +21,11 @@ const reviewSchema = new Schema({
   content: {
     type: String,
     required: true
+  },
+  isCommit: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, {
   timestamps: true
@@ -26,8 +36,10 @@ const Review = mongoose.model('Review', reviewSchema);
 function validateReview(review) {
   const schema = {
     orderId: Joi.string().required(),
+    userId: Joi.string().required(),
     rating: Joi.number().required(),
     content: Joi.string().required(),
+    isCommit: Joi.boolean().required(),
   }
   return Joi.validate(review, schema);
 }

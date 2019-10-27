@@ -19,6 +19,7 @@ router.get('/:id', async(req, res, next) => {
 
 // create review
 router.post('/', async (req, res) => {
+  console.log( req.body );
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
   let review = new Review(req.body);
@@ -47,18 +48,19 @@ router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
   const orifilename = req.files.upload.name;
   const srvfilename = orifilename;
 
-  fs.readdir(path.join(__dirname, `../uploads/temp/${req.body.postId}`), (error) => {
+  fs.readdir(path.join(__dirname, `../uploads/temp`), (error) => {
+    // console.log( error );
     if(error) {
-      fs.mkdirSync(path.join(__dirname, '../uploads/temp/', req.body.postId))
+      fs.mkdirSync(path.join(__dirname, '../uploads/temp'));
     }
   })
 
   fs.readFile(orifilepath, (err, data) => {
-    const newPath = path.join(__dirname, '../uploads/temp/', req.body.postId, '/', srvfilename)
+    const newPath = path.join(__dirname, '../uploads/temp/', srvfilename)
     fs.writeFile(newPath, data, function (err) {
       if (err) console.log({ err: err });
       else {
-        html = "{\"filename\" : \"" + orifilename + "\", \"uploaded\" : 1, \"url\": \"/img/temp/" + req.body.postId + "/" +srvfilename + "\"}"
+        html = "{\"filename\" : \"" + orifilename + "\", \"uploaded\" : 1, \"url\": \"/img/temp/" +srvfilename + "\"}"
         res.send(html);
       }
     });

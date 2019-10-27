@@ -92,6 +92,18 @@ if (app.get('env') === 'production') {
   });
 }
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
+});
+
+const io = require('socket.io')(server);
+const socketImages = require('./lib/socketImages');
+
+io.on('connection', socket => {
+  console.log(`new connection on`);
+  // console.log( socket );
+  socketImages(socket);
+  socket.on('disconnect', () => {
+    console.log('disconnected');
+  });
 });
