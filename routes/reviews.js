@@ -5,6 +5,7 @@ const router = express.Router();
 
 const fs = require('fs');
 const path = require('path');
+const uuidv4 = require('uuid/v4');
 
 // get all review
 
@@ -64,11 +65,17 @@ const multipartMiddleware = multipart();
 const FileReader = require('filereader')
 
 router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
-  console.log(req.body)
+  // console.log(req);
+  if (!req.session.passport) return res.status(400).send('not loggedin');
+  console.log( req.params.id );
+  console.log( req.headers);
+  // console.log( req.headers.roomId());
+  console.log(req.session.passport);
+  console.log(req.user);
   console.log(req.files)
   const orifilepath = req.files.upload.path;
   const orifilename = req.files.upload.name;
-  const srvfilename = orifilename;
+  const srvfilename = uuidv4();
 
   fs.readdir(path.join(__dirname, `../uploads/temp`), (error) => {
     // console.log( error );
@@ -81,7 +88,7 @@ router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
     const newPath = path.join(__dirname, '../uploads/temp/', srvfilename)
     fs.writeFile(newPath, data, function (err) {
       if (err) console.log({ err: err });
-      else {
+      else {   
         html = "{\"filename\" : \"" + orifilename + "\", \"uploaded\" : 1, \"url\": \"/img/temp/" +srvfilename + "\"}"
         res.send(html);
       }

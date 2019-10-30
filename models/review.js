@@ -22,6 +22,9 @@ const reviewSchema = new Schema({
     type: String,
     required: true
   },
+  images: {
+    type: String
+  },
   isCommit: {
     type: Boolean,
     required: true,
