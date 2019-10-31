@@ -19,17 +19,19 @@ router.get('/:id', async(req, res, next) => {
 
 // get review by scolling down (infinte scroll)
 router.get(`/series/next`, async(req, res, next) => {
-  // if scroll be on top, lastSeen is initialized 
+  // if scroll be on top, lastSeen is initialized (offset=0)
   if (req.query.offset == 0) {
     lastSeen = new Date();
   }
+
+  // if scroll be on bottom, offset != 0
   await Review.find({ "createdAt": { "$lt": lastSeen} })
                             .sort({ "createdAt": -1})
-                            .limit(3)
+                            .limit(6)
                             .exec((err, docs) => {
                               if(docs.length == 0){
                                 // botton of posts
-                                res.send('Finished!')
+                                res.send(null)
                               }else {
                                 lastSeen = docs.slice(-1)[0].createdAt
                                 res.send(docs)
