@@ -103,7 +103,4 @@ io.on('connection', socket => {
   console.log(`new connection on`);
   // console.log( socket );
   socketImages(socket);
-  socket.on('disconnect', () => {
-    console.log('disconnected');
-  });
 });
