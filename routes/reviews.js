@@ -11,8 +11,7 @@ const uuidv4 = require('uuid/v4');
 
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  let review = await Review.findOne({"orderId": req.params.id})
-
+  let review = await Review.findOne({"orderId": req.params.id, "userId": req.user._id});
   // Error::Cannot set headers after they are sent to the client 뜸 (false 뱉을때)
   // if(!review) res.send(false);
   res.send(review);
@@ -67,15 +66,12 @@ const FileReader = require('filereader')
 router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
   // console.log(req);
   if (!req.session.passport) return res.status(400).send('not loggedin');
-  console.log( req.params.id );
-  console.log( req.headers);
-  // console.log( req.headers.roomId());
-  console.log(req.session.passport);
-  console.log(req.user);
-  console.log(req.files)
+  console.log( req.files.upload );
+
   const orifilepath = req.files.upload.path;
   const orifilename = req.files.upload.name;
-  const srvfilename = uuidv4();
+  const orifileext  = orifilename.split('.')[orifilename.split('.').length-1]
+  const srvfilename = [ uuidv4(), orifileext ].join('.');
 
   fs.readdir(path.join(__dirname, `../uploads/temp`), (error) => {
     // console.log( error );

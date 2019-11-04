@@ -22,7 +22,7 @@ const reviewSchema = new Schema({
     type: String,
   },
   images: {
-    type: String
+    type: [ String ]
   },
   isCommit: {
     type: Boolean,
@@ -41,6 +41,7 @@ function validateReview(review) {
     userId: Joi.string().required(),
     rating: Joi.number().required(),
     content: Joi.any(),
+    images: Joi.array(),
     isCommit: Joi.boolean().required(),
   }
   return Joi.validate(review, schema);
