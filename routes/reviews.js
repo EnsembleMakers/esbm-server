@@ -27,22 +27,22 @@ router.get(`/series/next`, async(req, res, next) => {
 
   // if scroll be on bottom, offset != 0
   await Review.find({ "createdAt": { "$lt": lastSeen} })
-                            .sort({ "createdAt": -1})
-                            .limit(6)
-                            .exec((err, docs) => {
-                              if(docs.length == 0){
-                                // botton of posts
-                                res.send(null)
-                              }else {
-                                lastSeen = docs.slice(-1)[0].createdAt
-                                res.send(docs)
-                              }
-                            });
+              .sort({ "createdAt": -1})
+              // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
+              .limit(13)
+              .exec((err, docs) => {
+                if(docs.length == 0){
+                  // botton of posts
+                  res.send(null)
+                }else {
+                  lastSeen = docs.slice(-1)[0].createdAt
+                  res.send(docs)
+                }
+              });
 })
 
 // create review
 router.post('/', async (req, res) => {
-  console.log( req.body );
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
   let review = new Review(req.body);
