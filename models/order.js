@@ -25,6 +25,10 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
+  modelId: {
+    type: String,
+    ref: 'Model',
+  },
   contents: {
     template: {
       type: Array,
@@ -104,13 +108,14 @@ function validateOrder(order) {
       address: Joi.any()
     },
     makerId: Joi.string().required(),
+    modelId: Joi.string(),
     contents: { 
       template: Joi.array().items(
         Joi.object().keys({
           "label": Joi.string(),
           "value": Joi.any()
         })),
-      model: Joi.string().required(),
+      model: Joi.string(),
       detail: Joi.any()
     },
     // string or null

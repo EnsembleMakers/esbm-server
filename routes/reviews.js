@@ -7,12 +7,16 @@ const fs = require('fs');
 const path = require('path');
 const uuidv4 = require('uuid/v4');
 
-// get all review
-
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  let review = await Review.findOne({"orderId": req.params.id, "userId": req.user._id});
-  // let review = await Review.findOne({"orderId": req.params.id, "userId": req.body.user._id});
+  console.log(req.params.id)
+  let review = await Review.findOne({"_id": req.params.id})
+  res.send(review);
+})
+
+// get review by orderNumber
+router.get('/order/:id', async(req, res, next) => {
+  let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id});
   // Error::Cannot set headers after they are sent to the client 뜸 (false 뱉을때)
   // if(!review) res.send(false);
   res.send(review);

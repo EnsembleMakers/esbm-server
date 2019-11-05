@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const reviewSchema = new Schema({
-  orderId: {
+  orderNumber: {
     type: String,
     required: true,
     ref: "Order"
@@ -13,6 +13,10 @@ const reviewSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "User"
+  },
+  modelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Model"
   },
   rating: {
     type: Number,
@@ -40,8 +44,9 @@ const Review = mongoose.model('Review', reviewSchema);
 
 function validateReview(review) {
   const schema = {
-    orderId: Joi.string().required(),
+    orderNumber: Joi.string().required(),
     userId: Joi.string().required(),
+    modelId: Joi.string(),
     rating: Joi.number().required(),
     content: Joi.any(),
     tempContent: Joi.any(),
