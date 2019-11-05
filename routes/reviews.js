@@ -12,6 +12,7 @@ const uuidv4 = require('uuid/v4');
 // get review by id
 router.get('/:id', async(req, res, next) => {
   let review = await Review.findOne({"orderId": req.params.id, "userId": req.user._id});
+  // let review = await Review.findOne({"orderId": req.params.id, "userId": req.body.user._id});
   // Error::Cannot set headers after they are sent to the client 뜸 (false 뱉을때)
   // if(!review) res.send(false);
   res.send(review);
@@ -73,7 +74,7 @@ router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
   const orifileext  = orifilename.split('.')[orifilename.split('.').length-1]
   const srvfilename = [ uuidv4(), orifileext ].join('.');
 
-  fs.readdir(path.join(__dirname, `../uploads/temp`), (error) => {
+  fs.readdirSync(path.join(__dirname, `../uploads/temp`), (error) => {
     // console.log( error );
     if(error) {
       fs.mkdirSync(path.join(__dirname, '../uploads/temp'));
