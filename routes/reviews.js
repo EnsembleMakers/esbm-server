@@ -27,20 +27,42 @@ router.get(`/series/next`, async(req, res, next) => {
   // if scroll be on top, lastSeen is initialized (offset=0)
   if (req.query.offset == 0) {
     lastSeen = new Date();
+    selectedReview = [];
+    // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
+    if (req.query.review){
+      Review.find({ "_id": req.query.review })
+            .exec((err, docs) => {
+              selectedReview = docs
+            })
+    }
+  }
+  // if model query is exist, find review with model id.
+  // (if)reviewSeries/모델 에서 사용, (else)reviewSeries에서 사용
+  if (req.query.model) {
+    // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
+    if (req.query.review){
+      findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} })
+    }else {
+      findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen} })
+    }
+  }else {
+    findReview = () => Review.find({ "createdAt": { "$lt": lastSeen} })
   }
 
   // if scroll be on bottom, offset != 0
-  await Review.find({ "createdAt": { "$lt": lastSeen} })
+  // await Review.find({ "createdAt": { "$lt": lastSeen} })
+  await findReview()
               .sort({ "createdAt": -1})
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
               .limit(13)
               .exec((err, docs) => {
-                if(docs.length == 0){
+                const newDocs = selectedReview.concat(docs)
+                if(newDocs == 0){
                   // botton of posts
                   res.send(null)
                 }else {
-                  lastSeen = docs.slice(-1)[0].createdAt
-                  res.send(docs)
+                  lastSeen = newDocs.slice(-1)[0]['createdAt'];
+                  res.send(newDocs)
                 }
               });
 })
