@@ -25,6 +25,9 @@ const reviewSchema = new Schema({
   content: {
     type: String,
   },
+  tempContent: {
+    type: String,
+  },
   images: {
     type: [ String ]
   },
@@ -43,9 +46,10 @@ function validateReview(review) {
   const schema = {
     orderNumber: Joi.string().required(),
     userId: Joi.string().required(),
-    modelId: Joi.string(),
+    modelId: Joi.any(),
     rating: Joi.number().required(),
     content: Joi.any(),
+    tempContent: Joi.any(),
     images: Joi.array(),
     isCommit: Joi.boolean().required(),
   }

@@ -10,7 +10,7 @@ const uuidv4 = require('uuid/v4');
 // get review by id
 router.get('/:id', async(req, res, next) => {
   console.log(req.params.id)
-  let review = await Review.findOne({"_id": req.params.id})
+  let review = await Review.findById(req.params.id);
   res.send(review);
 })
 
@@ -70,7 +70,10 @@ router.get(`/series/next`, async(req, res, next) => {
 // create review
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.message);
+  if (error) {
+    console.log( error.message );
+    return res.status(400).send(error.message);
+  }
   let review = new Review(req.body);
   review = await review.save();
   res.send(review);
@@ -92,7 +95,7 @@ const FileReader = require('filereader')
 
 router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
   // console.log(req);
-  if (!req.session.passport) return res.status(400).send('not loggedin');
+  if (!req.session.passport) return res.status(400).send('not logged in');
   console.log( req.files.upload );
 
   const orifilepath = req.files.upload.path;
@@ -100,7 +103,7 @@ router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
   const orifileext  = orifilename.split('.')[orifilename.split('.').length-1]
   const srvfilename = [ uuidv4(), orifileext ].join('.');
 
-  fs.readdir(path.join(__dirname, `../uploads/temp`), (error) => {
+  fs.readdirSync(path.join(__dirname, `../uploads/temp`), (error) => {
     // console.log( error );
     if(error) {
       fs.mkdirSync(path.join(__dirname, '../uploads/temp'));
