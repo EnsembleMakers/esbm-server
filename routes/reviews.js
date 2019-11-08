@@ -25,22 +25,23 @@ router.get('/order/:id', async(req, res, next) => {
 // get review by scolling down (infinte scroll)
 router.get(`/series/next`, async(req, res, next) => {
   // if scroll be on top, lastSeen is initialized (offset=0)
+  let selectedReview = [];
   if (req.query.offset == 0) {
     lastSeen = new Date();
-    selectedReview = [];
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
-    if (req.query.review){
+    if (req.query.review != 'undefined'){
       Review.find({ "_id": req.query.review })
             .exec((err, docs) => {
-              selectedReview = docs
+              selectedReview = docs;
             })
     }
   }
+
   // if model query is exist, find review with model id.
   // (if)reviewSeries/모델 에서 사용, (else)reviewSeries에서 사용
   if (req.query.model) {
     // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
-    if (req.query.review){
+    if (req.query.review != 'undefined'){
       findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} })
     }else {
       findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen} })
@@ -50,9 +51,8 @@ router.get(`/series/next`, async(req, res, next) => {
   }
 
   // if scroll be on bottom, offset != 0
-  // await Review.find({ "createdAt": { "$lt": lastSeen} })
   await findReview()
-              .sort({ "createdAt": -1})
+              .sort({ "createdAt": -1 })
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
               .limit(13)
               .exec((err, docs) => {
@@ -61,6 +61,7 @@ router.get(`/series/next`, async(req, res, next) => {
                   // botton of posts
                   res.send(null)
                 }else {
+                  console.log(selectedReview)
                   lastSeen = newDocs.slice(-1)[0]['createdAt'];
                   res.send(newDocs)
                 }

@@ -22,6 +22,9 @@ const reviewSchema = new Schema({
     type: Number,
     required: true
   },
+  title: {
+    type: String
+  },
   content: {
     type: String,
   },
@@ -48,6 +51,7 @@ function validateReview(review) {
     userId: Joi.string().required(),
     modelId: Joi.any(),
     rating: Joi.number().required(),
+    title: Joi.any(),
     content: Joi.any(),
     tempContent: Joi.any(),
     images: Joi.array(),
