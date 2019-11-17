@@ -97,10 +97,10 @@ const server = app.listen(app.get('port'), () => {
 });
 
 const io = require('socket.io')(server);
-const socketImages = require('./lib/socketImages');
+const socketReview = require('./lib/socketReview');
 
 io.on('connection', socket => {
   console.log(`new connection on`);
   // console.log( socket );
-  socketImages(socket);
+  socketReview(socket);
 });
