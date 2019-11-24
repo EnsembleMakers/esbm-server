@@ -51,6 +51,10 @@ const userSchema = new Schema({
     required: true,
     default: 'local'
   },
+  coupons: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Coupon"
+  }],
   oauth2: String,
   posts_host: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -85,6 +89,7 @@ function validateUser(user) {
     role: Joi.string(),
     company: { companyName: Joi.string(), companyAddress: Joi.string(), companyPhone: Joi.string()},
     group: { grouped: Joi.boolean(), groupId: Joi.string() },
+    coupon: Joi.array(),
     provider: Joi.string(),
     oauth2: Joi.string()
   }

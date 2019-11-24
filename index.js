@@ -34,6 +34,7 @@ const reviewsRouter = require('./routes/reviews');
 const ordersRouter = require('./routes/orders');
 const orderTemplatesRouter = require('./routes/orderTemplates');
 const modelsRouter = require('./routes/models');
+const couponsRouter = require('./routes/coupons');
 
 /**
  * Middleware
@@ -67,6 +68,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/orderTemplates', orderTemplatesRouter);
 app.use('/api/models', modelsRouter);
+app.use('/api/coupons', couponsRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
