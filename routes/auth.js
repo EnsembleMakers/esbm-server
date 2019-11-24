@@ -66,12 +66,12 @@ router.get('/logout', isLoggedIn, (req, res) => {
   // console.log('----------------logout')
   req.logout();
   req.session.destroy();
-  res.redirect('/');
+  return res.redirect('/');
 })
 
 // check passport
 router.get('/check', isLoggedIn, (req, res) => {
-  res.send(req.isAuthenticated())
+  return res.send(req.isAuthenticated())
 })
 
 router.get('/kakao', passport.authenticate('kakao'));
