@@ -9,7 +9,6 @@ const uuidv4 = require('uuid/v4');
 
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  console.log(req.params.id)
   let review = await Review.findById(req.params.id);
   res.send(review);
 })
@@ -31,6 +30,7 @@ router.get(`/series/next`, async(req, res, next) => {
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
       Review.find({ "_id": req.query.review })
+            .populate('userId', 'username')
             .exec((err, docs) => {
               selectedReview = docs;
             })
@@ -52,6 +52,7 @@ router.get(`/series/next`, async(req, res, next) => {
 
   // if scroll be on bottom, offset != 0
   await findReview()
+              .populate('userId', 'username')
               .sort({ "createdAt": -1 })
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
               .limit(13)
