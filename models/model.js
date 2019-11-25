@@ -16,6 +16,10 @@ const modelSchema = new Schema({
     model: String,
     template: {
       type: Array,
+    },
+    spec: {
+      type: Object,
+      required: true
     }
   },
 }, {
@@ -34,7 +38,8 @@ function validateOrder(model) {
         Joi.object().keys({
           "label": Joi.string(),
           "value": Joi.any()
-        }))
+        })),
+      spec: Joi.object().required(),
     },
   }
   return Joi.validate(model, schema);
