@@ -9,7 +9,7 @@ const uuidv4 = require('uuid/v4');
 
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  let review = await Review.findById(req.params.id);
+  let review = await Review.findById(req.params.id).populate('modelId');
   res.send(review);
 })
 
@@ -55,6 +55,7 @@ router.get(`/series/next`, async(req, res, next) => {
   // if scroll be on bottom, offset != 0
   const test = await findReview()
               .populate('userId', 'username')
+              .populate('modelId', 'contents')
               .sort({ "createdAt": -1 })
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
               .limit(13)
