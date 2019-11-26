@@ -34,6 +34,15 @@ const reviewSchema = new Schema({
   images: {
     type: [ String ]
   },
+  coverImg: {
+    type: String
+  },
+  coverImgType: {
+    type: String
+  },
+  tempCoverImg: {
+    type: Buffer
+  },
   isCommit: {
     type: Boolean,
     required: true,
