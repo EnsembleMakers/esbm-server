@@ -58,7 +58,7 @@ function validateReview(review) {
   const schema = {
     orderNumber: Joi.string().required(),
     userId: Joi.string().required(),
-    modelId: Joi.any(),
+    modelId: Joi.string(),
     rating: Joi.number().required(),
     title: Joi.any(),
     content: Joi.any(),

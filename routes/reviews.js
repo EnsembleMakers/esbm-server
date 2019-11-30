@@ -30,7 +30,7 @@ router.get(`/series/next`, async(req, res, next) => {
     lastSeen = new Date();
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
-      await Review.find({ "_id": req.query.review })
+      await Review.find({ "_id": req.query.review, "isCommit": true })
             // .populate('userId', 'username')         
             .exec((err, docs) => {
               selectedReview = docs;
@@ -43,14 +43,13 @@ router.get(`/series/next`, async(req, res, next) => {
   if (req.query.model) {
     // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
     if (req.query.review != 'undefined'){
-      findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} })
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} })
     }else {
-      findReview = () => Review.find({ "modelId": req.query.model, "createdAt": { "$lt": lastSeen} })
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} })
     }
   }else {
-    findReview = () => Review.find({ "createdAt": { "$lt": lastSeen} })
+    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} })
   }
-
 
   // if scroll be on bottom, offset != 0
   const test = await findReview()
