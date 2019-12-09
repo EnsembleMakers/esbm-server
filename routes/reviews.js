@@ -15,7 +15,7 @@ router.get('/:id', async(req, res, next) => {
 
 // get review by orderNumber
 router.get('/order/:id', async(req, res, next) => {
-  let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id});
+  let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id}).select('-tempCoverImg');
   // Error::Cannot set headers after they are sent to the client 뜸 (false 뱉을때)
   // if(!review) res.send(false);
   res.send(review);
@@ -31,6 +31,7 @@ router.get(`/series/next`, async(req, res, next) => {
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
       await Review.find({ "_id": req.query.review, "isCommit": true })
+            .select('-tempCoverImg')
             // .populate('userId', 'username')         
             .exec((err, docs) => {
               selectedReview = docs;
@@ -43,12 +44,12 @@ router.get(`/series/next`, async(req, res, next) => {
   if (req.query.model) {
     // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
     if (req.query.review != 'undefined'){
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} })
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} }).select('-tempCoverImg')
     }else {
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} })
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg')
     }
   }else {
-    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} })
+    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg')
   }
 
   // if scroll be on bottom, offset != 0
