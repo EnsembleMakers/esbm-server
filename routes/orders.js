@@ -22,6 +22,7 @@ router.get('/:id', async(req, res, next) => {
 // get order by orderNumber
 router.get('/byNum/:id', async(req, res, next) => {
   let order = await Order.findOne({"orderNumber": req.params.id})
+                          .populate('modelId', 'contents modelImage')
   res.send(order);
 })
 
