@@ -28,10 +28,10 @@ router.get(`/series/next`, async(req, res, next) => {
   let selectedReview = [];
   if (req.query.offset == 0) {
     lastSeen = new Date();
+
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
       await Review.find({ "_id": req.query.review, "isCommit": true })
-            // .populate('userId', 'username')         
             .exec((err, docs) => {
               selectedReview = docs;
             })
@@ -52,7 +52,7 @@ router.get(`/series/next`, async(req, res, next) => {
   }
 
   // if scroll be on bottom, offset != 0
-  const test = await findReview()
+  await findReview()
               .populate('userId', 'username')
               .populate('modelId', 'contents')
               .sort({ "createdAt": -1 })
@@ -64,12 +64,10 @@ router.get(`/series/next`, async(req, res, next) => {
                   // botton of posts
                   res.send(null)
                 }else {
-                  console.log(selectedReview)
                   lastSeen = newDocs.slice(-1)[0]['createdAt'];
                   res.send(newDocs)
                 }
               });
-
 })
 
 // create review
