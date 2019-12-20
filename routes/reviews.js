@@ -98,10 +98,7 @@ const multipartMiddleware = multipart();
 const FileReader = require('filereader')
 
 router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
-  // console.log(req);
   if (!req.session.passport) return res.status(400).send('not logged in');
-  console.log( req.files.upload );
-
   const orifilepath = req.files.upload.path;
   const orifilename = req.files.upload.name;
   const orifileext  = orifilename.split('.')[orifilename.split('.').length-1]
