@@ -1,20 +1,44 @@
 const { Coupon, validate } = require('../models/coupon');
+const { User } = require('../models/user');
 
 const express = require('express');
 const router = express.Router();
 
 // get all coupon
 router.get('/', async(req, res, next) => {
+  // TODO consider an error message
   if (!req.session.passport) return res.status(400).send('not logged in');
   console.log( req.session.passport );
+  const user = await User.findOne({"email": req.session.passport.user});
+  const coupons = await Coupon.find({"userId": user._id});
+  res.send(coupons);
+});
+
+// get coupon by review id
+router.get('/review/:id', async(req, res, next) => {
+  // TODO consider an error message
+  // console.log( req );
+  if (!req.session.passport) return res.status(400).send('not logged in');
+  console.log( req.session.passport.user );
+
+  const user = await User.findOne({"email": req.session.passport.user});
+  // console.log( user );
+  const coupon = await Coupon.findOne({"userId": user._id, "reviewId": req.params.id})
   // const coupons = await Coupon.find({"orderId": req.params.id});
-  // res.send(coupons);
+  // console.log( coupon );
+  res.send(coupon);
 });
 
 // get coupon by hash
-router.get('/:id', (req, res, next) => {
-  console.log( req.params.id );
-  return next();
+router.get('/:id', async (req, res, next) => {
+  try {
+    let coupon = await Coupon.findOne({"hash": req.params.id});
+    console.log( coupon );
+    res.send(coupon);
+  } catch (error) {
+    // TODO consider an error message
+    return res.status(400).send(null);
+  }
 });
 
 // create coupon
@@ -28,6 +52,20 @@ router.post('/', async (req, res) => {
   let coupon = new Coupon(req.body);
   coupon = await coupon.save();
   res.send(coupon);
+});
+
+// patch coupon by hash
+router.patch('/:id', async (req, res) => {
+  try {
+    let coupon = await Coupon.findOne({"hash": req.params.id});
+    coupon.isUsed = true;
+    await coupon.save();
+    res.send(coupon);
+  }
+  catch (error) {
+    // TODO consider an error message
+    return res.status(400).send(null);
+  }
 });
 
 module.exports = router;
