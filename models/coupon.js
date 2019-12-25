@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const { Schema } = mongoose;
 
@@ -23,6 +24,9 @@ const couponSchema = new Schema({
 }, {
   timestamps: true
 });
+
+couponSchema.index({ reviewId: 1, userId: 1 }, { unique: true });
+couponSchema.plugin(uniqueValidator);
 
 const Coupon = mongoose.model('Coupon', couponSchema);
 

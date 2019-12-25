@@ -59,7 +59,7 @@ function validateReview(review) {
     orderNumber: Joi.string().required(),
     // userId: Joi.string().required(),
     userId: Joi.any(),
-    modelId: Joi.string(),
+    modelId: Joi.any(),
     rating: Joi.number().required(),
     title: Joi.any(),
     content: Joi.any(),
