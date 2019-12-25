@@ -11,8 +11,8 @@ const reviewSchema = new Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User"
+    // required: true,
+    // ref: "User"
   },
   modelId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -57,7 +57,8 @@ const Review = mongoose.model('Review', reviewSchema);
 function validateReview(review) {
   const schema = {
     orderNumber: Joi.string().required(),
-    userId: Joi.string().required(),
+    // userId: Joi.string().required(),
+    userId: Joi.any(),
     modelId: Joi.string(),
     rating: Joi.number().required(),
     title: Joi.any(),

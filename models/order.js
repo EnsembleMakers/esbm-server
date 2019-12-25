@@ -23,7 +23,7 @@ const orderSchema = new Schema({
   },
   makerId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    // required: true,
   },
   modelId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -107,7 +107,8 @@ function validateOrder(order) {
       phone: Joi.string().required(),
       address: Joi.any()
     },
-    makerId: Joi.string().required(),
+    // makerId: Joi.string().required(),
+    makerId: Joi.any(),
     modelId: Joi.string(),
     contents: { 
       template: Joi.array().items(

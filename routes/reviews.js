@@ -15,9 +15,9 @@ router.get('/:id', async(req, res, next) => {
 
 // get review by orderNumber
 router.get('/order/:id', async(req, res, next) => {
-  let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id}).select('-tempCoverImg');
-  // Error::Cannot set headers after they are sent to the client 뜸 (false 뱉을때)
-  // if(!review) res.send(false);
+  // let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id}).select('-tempCoverImg');
+  // 로그인 임시 해제
+  let review = await Review.findOne({"orderNumber": req.params.id}).select('-tempCoverImg');
   res.send(review);
 });
 
