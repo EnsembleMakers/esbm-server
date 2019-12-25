@@ -20,13 +20,16 @@ const couponSchema = new Schema({
   isUsed: {
     type: Boolean,
     default: false
+  },
+  orderForm: {
+    type: Object
   }
 }, {
   timestamps: true
 });
 
-couponSchema.index({ reviewId: 1, userId: 1 }, { unique: true });
-couponSchema.plugin(uniqueValidator);
+// couponSchema.index({ reviewId: 1, userId: 1 }, { unique: true });
+// couponSchema.plugin(uniqueValidator);
 
 const Coupon = mongoose.model('Coupon', couponSchema);
 
@@ -35,7 +38,8 @@ function validateCoupon(coupon) {
     reviewId: Joi.string().required(),
     userId: Joi.string().required(),
     hash: Joi.any().required(),
-    isUsed: Joi.boolean()
+    isUsed: Joi.boolean(),
+    orderForm: Joi.object()
   }
   return Joi.validate(coupon, schema);
 }

@@ -44,14 +44,31 @@ router.get('/:id', async (req, res, next) => {
 // create coupon
 router.post('/', async (req, res) => {
   console.log(req.body);
-  const { error } = validate(req.body);
-  if (error) {
-    console.log( error.message );
-    return res.status(400).send(error.message);
+  let isOrderForm = false;
+  let orderFormCoupon = null;
+  try {
+    const userIdByOrderForm = JSON.parse(req.body.userId);
+    req.body.userId = null;
+    req.body = { orderForm: {...userIdByOrderForm}, ...req.body };
+    isOrderForm = (typeof userIdByOrderForm === 'object');
+    orderFormCoupon = await Coupon.findOne({"orderForm.name": userIdByOrderForm.name, "orderForm.phone": userIdByOrderForm.phone});
+  } catch {
+    isOrderForm = false;
+  } finally {
+    if (orderFormCoupon) {
+      return res.status(400).send(null);
+    } 
+    if (!isOrderForm) {
+      const { error } = validate(req.body);
+      if (error) {
+        console.log( error.message );
+        return res.status(400).send(error.message);
+      }
+    }
+    let coupon = new Coupon(req.body);
+    coupon = await coupon.save();
+    res.send(coupon);
   }
-  let coupon = new Coupon(req.body);
-  coupon = await coupon.save();
-  res.send(coupon);
 });
 
 // patch coupon by hash
