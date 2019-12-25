@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
     req.body = { orderForm: {...userIdByOrderForm}, ...req.body };
     isOrderForm = (typeof userIdByOrderForm === 'object');
     orderFormCoupon = await Coupon.findOne({"orderForm.name": userIdByOrderForm.name, "orderForm.phone": userIdByOrderForm.phone});
-  } catch {
+  } catch(err) {
     isOrderForm = false;
   } finally {
     if (orderFormCoupon) {
