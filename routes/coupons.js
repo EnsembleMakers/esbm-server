@@ -10,7 +10,18 @@ router.get('/', async(req, res, next) => {
   if (!req.session.passport) return res.status(400).send('not logged in');
   console.log( req.session.passport );
   const user = await User.findOne({"email": req.session.passport.user});
-  const coupons = await Coupon.find({"userId": user._id});
+  let coupons;
+  if (user.kind === 'admin') {
+    coupons = await Coupon.find({})
+                          .populate({
+                            path: 'reviewId',
+                            select: 'coverImg title rating',
+                            populate: {path: 'modelId', select: 'contents'}
+                          })
+                          .populate('userId', 'email username');
+  } else {
+    coupons = await Coupon.find({"userId": user._id});
+  }
   res.send(coupons);
 });
 
