@@ -32,8 +32,7 @@ router.get('/review/:id', async(req, res, next) => {
 // get coupon by hash
 router.get('/:id', async (req, res, next) => {
   try {
-    let coupon = await Coupon.findOne({"hash": req.params.id});
-    console.log( coupon );
+    let coupon = await Coupon.findOne({"hash": req.params.id})
     res.send(coupon);
   } catch (error) {
     // TODO consider an error message
@@ -43,7 +42,6 @@ router.get('/:id', async (req, res, next) => {
 
 // create coupon
 router.post('/', async (req, res) => {
-  console.log(req.body);
   let isOrderForm = false;
   let orderFormCoupon = null;
   try {
@@ -66,6 +64,7 @@ router.post('/', async (req, res) => {
       }
     }
     let coupon = new Coupon(req.body);
+    console.log(req.body)
     coupon = await coupon.save();
     res.send(coupon);
   }

@@ -22,8 +22,7 @@ const orderSchema = new Schema({
     required: true,
   },
   makerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    // required: true,
+    type: mongoose.Schema.Types.ObjectId
   },
   modelId: {
     type: mongoose.Schema.Types.ObjectId,

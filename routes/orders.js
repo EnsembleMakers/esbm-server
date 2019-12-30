@@ -15,7 +15,8 @@ router.get('/', async(req, res, next) => {
 
 // get order by id
 router.get('/:id', async(req, res, next) => {
-  let order = await Order.findOne({"_id": req.params.id});
+  let order = await Order.findOne({"_id": req.params.id})
+                          .populate('modelId', 'contents modelImage');
   res.send(order);
 })
 
@@ -40,18 +41,18 @@ router.post('/', async(req, res, next) => {
   let newOrder = req.body;
   // if order by model manager
   // copy model image
-  if(req.body.modelImage) {
-    // new model image name
-    const ext = path.extname(req.body.modelImage);
-    const newModelImage = path.basename(req.body.modelImage, ext) + '_copied_' + new Date().valueOf() + ext;
 
-    await fs.copyFile(`uploads/${req.body.modelImage.split('/')[2]}`, `uploads/${newModelImage}`,(err) => {
-      if (err) throw err;
-    })
+  // if(req.body.modelImage) {
+  //   // new model image name
+  //   const ext = path.extname(req.body.modelImage);
+  //   const newModelImage = path.basename(req.body.modelImage, ext) + '_copied_' + new Date().valueOf() + ext;
 
-    newOrder.modelImage = `/img/${newModelImage}`;
-  }
+  //   await fs.copyFile(`uploads/${req.body.modelImage.split('/')[2]}`, `uploads/${newModelImage}`,(err) => {
+  //     if (err) throw err;
+  //   })
 
+  //   newOrder.modelImage = `/img/${newModelImage}`;
+  // }
   let order = new Order(newOrder);
   order = await order.save();
   await res.send(order);
@@ -75,12 +76,13 @@ router.patch('/deadline/:id', async(req, res, next) => {
 
 // delete order by id
 router.delete('/:id', async(req, res, next) => {
+  await Order.deleteOne({ "_id": req.params.id })
   // image 삭제
-  fs.unlink(`uploads/${req.body.modelImage}`, async(err) => {
-    const order = await Order.deleteOne({
-      "_id": req.params.id
-    })
-  })
+  // fs.unlink(`uploads/${req.body.modelImage}`, async(err) => {
+  //   const order = await Order.deleteOne({
+  //     "_id": req.params.id
+  //   })
+  // })
   await res.send(req.params.id)
 })
 
