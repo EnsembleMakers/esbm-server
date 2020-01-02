@@ -94,15 +94,22 @@ router.patch('/:id', async(req, res, next) => {
 
 // CKEditor
 const multipart = require('connect-multiparty');
-const multipartMiddleware = multipart();
+const multipartMiddleware = multipart({
+    maxFilesSize: 1024 * 1024 * 5,
+    maxFieldsSize: '50MB'
+});
 const FileReader = require('filereader')
 
-router.post('/imageUpload', multipartMiddleware, async(req, res, next) => {
-  if (!req.session.passport) return res.status(400).send('not logged in');
+router.post('/imageUpload', (req, res, next)=>{
+    console.log('multipartMiddleware PASS');
+    return multipartMiddleware(req, res, next);
+  }, async(req, res, next) => {
+  //if (!req.session.passport) return res.status(400).send('not logged in');
   const orifilepath = req.files.upload.path;
   const orifilename = req.files.upload.name;
   const orifileext  = orifilename.split('.')[orifilename.split('.').length-1]
   const srvfilename = [ uuidv4(), orifileext ].join('.');
+  
 
   fs.readdirSync(path.join(__dirname, `../uploads/temp`), (error) => {
     // console.log( error );
