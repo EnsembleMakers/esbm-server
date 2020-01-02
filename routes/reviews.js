@@ -58,7 +58,7 @@ router.get(`/series/next`, async(req, res, next) => {
               .populate('modelId', 'contents')
               .sort({ "createdAt": -1 })
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
-              .limit(13)
+              .limit(20)
               .exec((err, docs) => {
                 const newDocs = selectedReview.concat(docs)
                 if(newDocs == 0){
