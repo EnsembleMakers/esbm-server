@@ -95,7 +95,7 @@ router.patch('/:id', async(req, res, next) => {
 // CKEditor
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
-    maxFilesSize: 1024 * 1024 * 5,
+    maxFilesSize: 1024 * 1024 * 50,
     maxFieldsSize: '50MB'
 });
 const FileReader = require('filereader')
