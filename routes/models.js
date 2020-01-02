@@ -26,8 +26,9 @@ router.get('/byId/:id', async(req, res, next) => {
 });
 
 // get model by modelName
-router.get('/byName/:name', async(req, res, next) => {
+router.get('/byName/:makerId/:name', async(req, res, next) => {
   const models = await Model.findOne({
+    "makerId": req.params.makerId,
     "contents.model": req.params.name
   })
   res.send(models)
