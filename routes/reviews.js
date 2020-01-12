@@ -9,7 +9,13 @@ const uuidv4 = require('uuid/v4');
 
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  let review = await Review.findById(req.params.id).populate('modelId').select('-tempCoverImg -tempContent');
+  const referrerPath = req.get('Referrer').split('/')[3];
+  let review;
+  if (referrerPath === 'reviewOrder') {
+    review = await Review.findById(req.params.id).populate('modelId').select('-tempCoverImg -tempContent');
+  } else {
+    review = await Review.findById(req.params.id).populate('modelId');
+  }
   res.send(review);
 })
 
@@ -17,7 +23,13 @@ router.get('/:id', async(req, res, next) => {
 router.get('/order/:id', async(req, res, next) => {
   // let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id}).select('-tempCoverImg');
   // 로그인 임시 해제
-  let review = await Review.findOne({"orderNumber": req.params.id}).select('-tempCoverImg -tempContent');
+  const referrerPath = req.get('Referrer').split('/')[3];
+  let review;
+  if (referrerPath === 'reviewOrder') {
+    review = await Review.findOne({"orderNumber": req.params.id}).select('-tempCoverImg -tempContent');
+  } else {
+    review = await Review.findOne({"orderNumber": req.params.id});
+  }
   res.send(review);
 });
 
