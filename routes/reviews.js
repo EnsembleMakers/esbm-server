@@ -9,7 +9,7 @@ const uuidv4 = require('uuid/v4');
 
 // get review by id
 router.get('/:id', async(req, res, next) => {
-  let review = await Review.findById(req.params.id).populate('modelId');
+  let review = await Review.findById(req.params.id).populate('modelId').select('-tempCoverImg -tempContent');
   res.send(review);
 })
 
@@ -17,7 +17,7 @@ router.get('/:id', async(req, res, next) => {
 router.get('/order/:id', async(req, res, next) => {
   // let review = await Review.findOne({"orderNumber": req.params.id, "userId": req.user._id}).select('-tempCoverImg');
   // 로그인 임시 해제
-  let review = await Review.findOne({"orderNumber": req.params.id}).select('-tempCoverImg');
+  let review = await Review.findOne({"orderNumber": req.params.id}).select('-tempCoverImg -tempContent');
   res.send(review);
 });
 
@@ -32,7 +32,7 @@ router.get(`/series/next`, async(req, res, next) => {
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
       await Review.find({ "_id": req.query.review, "isCommit": true })
-            .select('-tempCoverImg')
+            .select('-tempCoverImg -tempContent')
             .exec((err, docs) => {
               selectedReview = docs;
             })
@@ -44,12 +44,12 @@ router.get(`/series/next`, async(req, res, next) => {
   if (req.query.model) {
     // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
     if (req.query.review != 'undefined'){
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} }).select('-tempCoverImg')
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} }).select('-tempCoverImg -tempContent')
     }else {
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg')
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg -tempContent')
     }
   }else {
-    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg')
+    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg -tempContent')
   }
 
   // if scroll be on bottom, offset != 0
@@ -58,7 +58,7 @@ router.get(`/series/next`, async(req, res, next) => {
               .populate('modelId', 'contents')
               .sort({ "createdAt": -1 })
               // 세로모니터일 경우 (브라우저 길이에 따라 다르게 표시할 것) offset 이용
-              .limit(13)
+              .limit(20)
               .exec((err, docs) => {
                 const newDocs = selectedReview.concat(docs)
                 if(newDocs == 0){
