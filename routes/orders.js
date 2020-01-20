@@ -29,7 +29,7 @@ router.get('/byNum/:id', async(req, res, next) => {
 
 // get orders by by makerId
 router.get('/byMakerId/:id', async(req, res, next) => {
-  // customerInfo, state, _id만 반환
+  // customerInfo, state, id만 반환
   let order = await Order.find({"makerId": req.params.id},{customerInfo: true, state: true, _id: true});
   res.send(order);
 })
