@@ -47,6 +47,10 @@ const reviewSchema = new Schema({
     type: Boolean,
     required: true,
     default: false
+  },
+  en: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
@@ -66,6 +70,7 @@ function validateReview(review) {
     tempContent: Joi.any(),
     images: Joi.array(),
     isCommit: Joi.boolean().required(),
+    en: Joi.boolean()
   }
   return Joi.validate(review, schema);
 }

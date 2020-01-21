@@ -35,15 +35,15 @@ router.get('/order/:id', async(req, res, next) => {
 
 // get review by scolling down (infinte scroll)
 router.get(`/series/next`, async(req, res, next) => {
-  
   // if scroll be on top, lastSeen is initialized (offset=0)
+  console.log(req.query)
   let selectedReview = [];
   if (req.query.offset == 0) {
     lastSeen = new Date();
 
     // selectedReview = 맨첫번째 선택된 reviewSeries를 맨앞으로
     if (req.query.review != 'undefined'){
-      await Review.find({ "_id": req.query.review, "isCommit": true })
+      await Review.find({ "_id": req.query.review, "isCommit": true, "en": req.query.en })
             .select('-tempCoverImg -tempContent')
             .exec((err, docs) => {
               selectedReview = docs;
@@ -56,12 +56,12 @@ router.get(`/series/next`, async(req, res, next) => {
   if (req.query.model) {
     // reviewSeries/모델&리뷰 에서 선택한모델제외하고 검색
     if (req.query.review != 'undefined'){
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review} }).select('-tempCoverImg -tempContent')
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen }, "_id": { "$ne": req.query.review}, "en": req.query.en }).select('-tempCoverImg -tempContent')
     }else {
-      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg -tempContent')
+      findReview = () => Review.find({ "isCommit": true, "modelId": req.query.model, "createdAt": { "$lt": lastSeen}, "en": req.query.en }).select('-tempCoverImg -tempContent')
     }
   }else {
-    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen} }).select('-tempCoverImg -tempContent')
+    findReview = () => Review.find({ "isCommit": true, "createdAt": { "$lt": lastSeen}, "en": req.query.en }).select('-tempCoverImg -tempContent')
   }
 
   // if scroll be on bottom, offset != 0
